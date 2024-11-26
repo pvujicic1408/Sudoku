@@ -88,6 +88,41 @@ public class SolverDefault implements Solver {
 
 		return EMPTY_MOVES_LIST;
 	}
+	
+	private List<Move> solveLockedCandidates1(){
+		for (int row = 0; row < Board.DIMENSION; row++) {
+			for (int column = 0; column < Board.DIMENSION; column++) {
+				if (!board.isSolved(row, column) && board.getPossibilitiesCount(row, column) >= 2) {
+					for (int value = 0; value < Board.DIMENSION; value++) {
+						if (board.isPossible(row, column, value)) {
+							List<Move> moves = new ArrayList<>();
+							
+							int valueCounterInColumn = 1;
+							for (int x = 3 * (row / 3); x < 3 * (row / 3 + 1); x++) {
+								if(x==row)continue;
+								if (board.isPossible(x, column, value)) valueCounterInColumn++;
+							}
+							int valueCounterInRow = 1;
+							for (int y = 3 * (column / 3); y < 3 * (column / 3 + 1); y++) {
+								if (y == column) continue;
+								if (board.isPossible(row, y, value)) valueCounterInRow++;
+								}
+							
+							if(valueCounterInColumn == 1 && valueCounterInRow > 1) {
+								for(int x = 0; x < Board.DIMENSION; x++ ) {
+									
+									board.disable(x, column, value);
+							}
+						}
+					}
+				}
+			}
+		}
+		}
+
+		return EMPTY_MOVES_LIST;
+	}
+	
    
    
    private boolean isSolutionStep(List<Move> moves) {
