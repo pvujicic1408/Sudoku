@@ -36,6 +36,8 @@ public class SolverDefault implements Solver {
 	    if (isSolutionStep(moves)) {
 	        return moves;
 	    }
+	    
+	    solveLockedCandidates1();
 
 	    // Ako nijedna metoda nije nasla resenje, vracamo praznu listu
 	    return EMPTY_MOVES_LIST;
@@ -89,7 +91,7 @@ public class SolverDefault implements Solver {
 		return EMPTY_MOVES_LIST;
 	}
 	
-	private List<Move> solveLockedCandidates1(){
+	private void solveLockedCandidates1(){
 		for (int row = 0; row < Board.DIMENSION; row++) {
 			for (int column = 0; column < Board.DIMENSION; column++) {
 				if (!board.isSolved(row, column) && board.getPossibilitiesCount(row, column) >= 2) {
@@ -108,9 +110,9 @@ public class SolverDefault implements Solver {
 								if (board.isPossible(row, y, value)) valueCounterInRow++;
 								}
 							
-							if(valueCounterInColumn == 1 && valueCounterInRow > 1) {
+							if(valueCounterInColumn > 1 && valueCounterInRow == 1) {
 								for(int x = 0; x < Board.DIMENSION; x++ ) {
-									
+									if((x==3 * (row / 3)) || (x==3 * (row / 3)+1) || (x==3 * (row / 3)+2)) continue;
 									board.disable(x, column, value);
 							}
 						}
@@ -120,7 +122,6 @@ public class SolverDefault implements Solver {
 		}
 		}
 
-		return EMPTY_MOVES_LIST;
 	}
 	
    
